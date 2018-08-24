@@ -1,14 +1,14 @@
 import cv2
 import face_recognition
 import os
-
-def AbsPath(catalog):
+import shutil
+def Test(rootDir):
     trainingLib = []
  
-    for file in os.listdir(catalog):    #os.listdir()是获取当前目录下的文件（当然包括文件夹和各种格式如.html，.xls等文件）
-        file_path = os.path.join(catalog,file)    #加入根目录使得到完整路径
+    for file in os.listdir(rootDir):    #os.listdir()是获取当前目录下的文件（当然包括文件夹和各种格式如.html，.xls等文件）
+        file_path = os.path.join(rootDir,file)    #加入根目录使得到完整路径
         if os.path.isdir(file_path):      #如果还是文件夹，继续调用Test（）函数，得到当前文件夹下的各个文件
-            AbsPath(file_path)
+            Test(file_path)
         if '.jpg' in file_path:     #选取.jpg文件
  
             file_name = file_path
@@ -18,7 +18,7 @@ def AbsPath(catalog):
 
 def Recogition():
     Dir = input()
-    trainingLib = AbsPath(Dir)
+    trainingLib = Test(Dir)
     image = []
     FaceEncoding = []
     for i in range(len(trainingLib)):
@@ -35,17 +35,19 @@ def Comparison():
     train = Recogition()
     print("请输入测试目录：")
     test = Recogition()
-    trainName=AbsPath('test')
-    finalName=''
+    trainName=Test('train')
+    testName=Test('test')
+    finalTrainName='hello'
+    finalTestName='hi'
     for i in range(len(train)):
         results = face_recognition.compare_faces(test,train[i])
-        #path=os.getcwd()[:-4] + test[i]+'\\'
-        #path=os.path.join(os.getcwd(),test[i]+'\\')
-        finalName=splitName(trainName[i])
-        #print(finalName)
-        #print(type(trainName[i]))
-        path=os.getcwd()+"\\"+finalName+"\\"
+        finalTrainName=splitName(trainName[i])
+        path=os.getcwd()+"\\"+finalTrainName+"\\"
         os.mkdir(path)
+        for j in range(len(test)):
+            if results[j]:
+                finalTestName=splitName(testName[j])
+                copyFile(testName[j],finalTestName,finalTrainName)
         print(results)
         
 def splitName(name):
@@ -55,7 +57,10 @@ def splitName(name):
     secondSplit=firstSplit[0].split('\\')
     finalName=secondSplit[1]
     return finalName
-        
+def copyFile(fullname,splitname,trainName):
+    oldname=fullname
+    newname=trainName+"\\"+splitname+'.jpg'
+    shutil.copyfile(oldname,newname)
 Comparison()
 
 
