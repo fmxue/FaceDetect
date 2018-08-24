@@ -37,7 +37,7 @@ def Comparison():
     test = Recogition()
     for i in range(len(test)):
         results = face_recognition.compare_faces(train,test[i])
-        path='C:\\Users\\hxf10\\Desktop\\黄潇飞\\2018夏工程训练营\\作业\\FaceDetect\\'+test[i]+'\\'
+        path='FaceDetect\\'+test[i]+'\\'
         #path=os.path.join(os.getcwd(),test[i]+'\\')
         mkdir(path)
         print(results)
