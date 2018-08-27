@@ -2,6 +2,8 @@ import cv2
 import face_recognition
 import os 
 
+print("Press 'Q' to quit")
+
 def AbsPath(catalog):
     trainingLib = []
  
